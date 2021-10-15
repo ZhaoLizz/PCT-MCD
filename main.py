@@ -109,21 +109,13 @@ def train(args, io):
             
             batch_size = data.size()[0]
             
-            if args.apply_pcm:
-                data, mixup_vals = PCM.mix_shapes(args.mixup_params, data, label)
-                pred_s1, pred_s2 = model(data)
-                loss_s1 = PCM.calc_loss(pred_s1,mixup_vals,criterion)
-                loss_s2 = PCM.calc_loss(pred_s2,mixup_vals,criterion)
-                loss_s = loss_s1 + loss_s2
-                loss_s.backward(retain_graph=True)
-                
-            else:
-                # classification loss: L_cls
-                pred_s1, pred_s2 = model(data)
-                loss_s1 = criterion(pred_s1, label)
-                loss_s2 = criterion(pred_s2, label)
-                loss_s = loss_s1 + loss_s2
-                loss_s.backward(retain_graph=True)
+            
+            # classification loss: L_cls
+            pred_s1, pred_s2 = model(data)
+            loss_s1 = criterion(pred_s1, label)
+            loss_s2 = criterion(pred_s2, label)
+            loss_s = loss_s1 + loss_s2
+            loss_s.backward(retain_graph=True)
 
             # L_dis
             pred_t1, pred_t2 = model(data_t, constant=1.0, adaptation=True)
@@ -322,10 +314,8 @@ if __name__ == "__main__":
                         help='evaluate the model')
     parser.add_argument('--model_path', type=str, default='checkpoints/change_to_your_dir', metavar='N',
                         help='Pretrained model path')
-    parser.add_argument('--target_username', type=str, default='cuixinyu')
+    parser.add_argument('--target_username', type=str, default='S1')
     parser.add_argument('--dataroot',type=str, help='directory of data', default='Locomotion/data/6frame/step3')
-    parser.add_argument('--apply_pcm', type=bool, default=False)
-    parser.add_argument('--mixup_params', type=float, default=1.0, help='a,b in beta distribution')
     parser.add_argument('--exp_name', type=str, default='exp/change_to_your_dir', metavar='N',
                         help='Name of the experiment')
     
