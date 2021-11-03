@@ -16,7 +16,6 @@ from util import cal_loss, IOStream
 import sklearn.metrics as metrics
 from WIPDataLoader import load_locomotion_loso_data
 import torch.nn.functional as F
-import PCM
 import time 
 from sklearn.metrics import confusion_matrix
 
